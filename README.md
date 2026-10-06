@@ -10,7 +10,7 @@ every phrase fits the time the original one had**, speaks it with a free voice, 
 exact second where the original phrase starts, mixes it with the original music and cuts the file to the
 exact length of the video - which is what YouTube checks.
 
-[Русская версия](README.ru.md)
+[Русская версия](README.ru.md) · **YouTube: [subscribe to @oknehcvark](https://www.youtube.com/@oknehcvark)**
 
 ## Use it with an agent
 
@@ -106,6 +106,10 @@ pytest -q
 
 They cover the timing logic (placement, speed-up, slow-down, phrase grouping, subtitles, error rate) and
 need no network, models or media.
+
+## Author
+
+Roman - [@oknehcvark on YouTube](https://www.youtube.com/@oknehcvark). Subscribe if this was useful.
 
 ## License
 
