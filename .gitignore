@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# media and work folders: never commit the user's videos, audio or results
+*.mp4
+*.mov
+*.mkv
+*.wav
+*.m4a
+*.mp3
+*.aac
+out/
+work/
+segs/
+
+.DS_Store

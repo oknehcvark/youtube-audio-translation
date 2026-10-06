@@ -1,0 +1,8 @@
+numpy>=1.21
+soundfile>=0.12
+edge-tts>=6.1
+faster-whisper>=1.0
+pyrubberband>=0.3
+# Also needed (not pip packages): the ffmpeg binary (>= 4.4) and, for better speed-ups, the `rubberband` binary.
+# Separating the music from the voice needs a separator, installed on its own because it is large:
+#   pip install "audio-separator[cpu]"
