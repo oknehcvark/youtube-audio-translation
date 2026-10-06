@@ -1,5 +1,7 @@
 # YouTube Audio Translation
 
+![Greetings in dozens of languages over the globe](docs/banner.webp)
+
 **Dub your video into other languages with an AI agent (Claude Code or Codex), keep the music, and upload
 the result to YouTube as an extra audio track.**
 
