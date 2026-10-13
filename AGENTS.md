@@ -27,6 +27,8 @@ Rules that matter (each one was learned the hard way - see the skill):
   automatic translator: it ignores the time each phrase has.
 - You cannot hear the audio. Verify with numbers (`check`) and say so; do not claim it sounds good.
 - Ask before installing anything. Never overwrite or delete the user's files; write to a separate folder.
+- Languages: any language with an `edge-tts` voice (75 at the time of writing, see `docs/languages.md`),
+  not "every language". Read the "Languages" section of the skill before promising a language.
 
 ## If you are changing the code
 

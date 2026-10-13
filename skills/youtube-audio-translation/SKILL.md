@@ -30,6 +30,22 @@ each phrase to fit its time -> **build** (speak every phrase and put it on the o
 6. Ask before installing anything. Never overwrite or delete the user's files; work in a separate folder
    (for example `work/` next to the video).
 
+## Languages
+
+Any language that has an `edge-tts` voice can be a target: 75 languages, 142 regional variants and 322 voices
+at the time of writing (table: `docs/languages.md`; live list: `edge-tts --list-voices`). The original can be
+any of about 100 languages the Whisper recognizer knows. Do not tell the user it works for "every language".
+
+- `--lang` of `transcribe` and `check` is a **Whisper** code, which differs from the voice's code for Filipino
+  (`tl`, voices `fil-`), Norwegian (`no`, voices `nb-`) and Javanese (`jw`, voices `jv-`). Irish, Zulu and
+  Inuktitut have voices but no recognizer: skip `check` for them and say so.
+- `budget` is tuned for en, fr, es, pt, it, de, ru, hi, zh, ja, ko. Every other language falls back to 14
+  characters per second, which is only an estimate: expect more speed-up and slow-down, and tell the user.
+- `check` scores per word, so for Lao, Khmer and Burmese (no spaces between words) its number is unreliable.
+- Only French, Spanish, Chinese and Hindi were run end to end. For every other language say that it is untested.
+- Your translation is weaker in rare languages (Zulu, Somali, Inuktitut ...). Say so, and ask for a native
+  speaker.
+
 ## 1. Check the setup (once)
 
 ```bash
