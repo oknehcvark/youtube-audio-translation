@@ -1,13 +1,13 @@
 # YouTube Audio Translation
 
+[English version](README.md) · **YouTube: [подписывайтесь на @oknehcvark](https://www.youtube.com/@oknehcvark)**
+
 ![Приветствия на десятках языков над земным шаром](docs/banner.svg)
 
 **Озвучьте своё видео на 75 языках. Голос говорит на другом языке, ваша музыка остаётся, а зритель выбирает
 язык звука прямо в плеере YouTube.**
 
 ![75 языков озвучки, около 100 языков оригинала, 322 голоса, бесплатно](docs/stats.ru.svg)
-
-[English version](README.md) · **YouTube: [подписывайтесь на @oknehcvark](https://www.youtube.com/@oknehcvark)**
 
 ## Что это, простыми словами
 
@@ -182,6 +182,20 @@ WER это доля неверных слов, CER доля неверных з�
 **Что делать, если что-то не работает?** Посмотрите раздел «Если что-то пошло не так» в
 [SKILL.md](skills/youtube-audio-translation/SKILL.md), а затем
 [откройте issue](https://github.com/oknehcvark/youtube-audio-translation/issues) и приложите вывод команды.
+
+## Поддержать проект
+
+![Поддержать проект: USDT, сеть TRC20, кошелёк в @CryptoBot](docs/donate.ru.svg)
+
+Инструмент бесплатный и открытый. Если он сэкономил вам время, можно поддержать автора: **USDT, сеть TRC20
+(TRON)**, кошелёк в Telegram-боте [@CryptoBot](https://t.me/CryptoBot). Адрес можно скопировать или
+отсканировать QR-код выше:
+
+```text
+TKvHTvPX5SyhhTkfz4oYJJTmVNrANeyGBZ
+```
+
+Отправляйте только USDT по сети TRC20. Если отправить другую монету или по другой сети, деньги могут пропасть.
 
 ## Тесты
 

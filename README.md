@@ -1,13 +1,13 @@
 # YouTube Audio Translation
 
+[Русская версия](README.ru.md) · **YouTube: [subscribe to @oknehcvark](https://www.youtube.com/@oknehcvark)**
+
 ![Greetings in dozens of languages over the globe](docs/banner.svg)
 
 **Dub your video into 75 languages. The voice speaks another language, your music stays, and the viewer picks
 the audio language right in the YouTube player.**
 
 ![75 languages to dub into, about 100 languages of the original, 322 voices, free](docs/stats.en.svg)
-
-[Русская версия](README.ru.md) · **YouTube: [subscribe to @oknehcvark](https://www.youtube.com/@oknehcvark)**
 
 ## What it is, in plain words
 
@@ -186,6 +186,20 @@ timing measurements in the repository yet.
 [SKILL.md](skills/youtube-audio-translation/SKILL.md), then
 [open an issue](https://github.com/oknehcvark/youtube-audio-translation/issues) and attach the output of the
 command.
+
+## Support the project
+
+![Support the project: USDT, TRC20 network, wallet in @CryptoBot](docs/donate.en.svg)
+
+The tool is free and open. If it saved you time, you can support the author: **USDT on the TRC20 (TRON)
+network**, a wallet in the Telegram bot [@CryptoBot](https://t.me/CryptoBot). Copy the address or scan the QR
+code above:
+
+```text
+TKvHTvPX5SyhhTkfz4oYJJTmVNrANeyGBZ
+```
+
+Send only USDT on the TRC20 network. If you send another coin or use another network, the money can be lost.
 
 ## Tests
 
