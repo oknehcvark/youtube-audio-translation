@@ -1,6 +1,6 @@
 # YouTube Audio Translation
 
-![Greetings in dozens of languages over the globe](docs/banner.webp)
+![Greetings in dozens of languages over the globe](docs/banner.svg)
 
 **Dub your video into 75 languages. The voice speaks another language, your music stays, and the viewer picks
 the audio language right in the YouTube player.**
