@@ -176,7 +176,11 @@ def active_rms(x, sr=SR):
 
 # Comfortable speaking speed of the stock voices, in characters per second (tuned on real runs: with these
 # budgets phrases needed at most ~1.1-1.25x speed-up). Chinese/Japanese/Korean are counted in characters.
-CPS = {"en": 15, "fr": 15, "es": 14, "pt": 14, "it": 14, "de": 13, "ru": 14, "hi": 13, "zh": 5, "ja": 7, "ko": 8}
+# Measured on 30 phrases per voice (text length incl. spaces / trimmed audio length): fr 16.5, en-AU 14.9,
+# es-MX 14.1, id 13.2, hi 11.7, zh 5.3 - the table keeps roughly 10% below that. An earlier 13 for Hindi
+# and the default 14 for Indonesian were too high: 13 and 7 phrases needed more than 1.25x.
+CPS = {"en": 15, "fr": 15, "es": 14, "pt": 14, "it": 14, "de": 13, "ru": 14, "hi": 11, "id": 12, "zh": 5,
+       "ja": 7, "ko": 8}
 
 
 def max_chars(slot, lang):
@@ -202,23 +206,48 @@ def group_words(words, gap=0.5, max_len=7.0, min_sentence=2.0):
 
 
 # ----------------------------------------------------------------------------- scoring (pure)
-def error_rate(ref_text, hyp_text, lang):
-    """Word error rate (character error rate for CJK languages), in percent."""
-    def norm(s):
-        s = s.lower().replace("’", "'")
-        return re.sub(r"[\s.,!?;:\-—\"«»¿¡।'()，。！？：；、“”…]+", "" if lang in CJK else " ", s).strip()
-    r, h = norm(ref_text), norm(hyp_text)
-    r = list(r) if lang in CJK else r.split()
-    h = list(h) if lang in CJK else h.split()
-    if not r:
-        return 0.0
+def _tokens(text, lang):
+    """Lower-cased words (characters for CJK languages) with punctuation removed."""
+    s = text.lower().replace("’", "'")
+    s = re.sub(r"[\s.,!?;:\-—\"«»¿¡।'()，。！？：；、“”…]+", "" if lang in CJK else " ", s).strip()
+    return list(s) if lang in CJK else s.split()
+
+
+def _edit_distance(r, h):
     prev = list(range(len(h) + 1))
     for i in range(1, len(r) + 1):
         cur = [i] + [0] * len(h)
         for j in range(1, len(h) + 1):
             cur[j] = min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (r[i - 1] != h[j - 1]))
         prev = cur
-    return 100.0 * prev[-1] / len(r)
+    return prev[-1]
+
+
+def error_rate(ref_text, hyp_text, lang):
+    """Word error rate (character error rate for CJK languages), in percent."""
+    r, h = _tokens(ref_text, lang), _tokens(hyp_text, lang)
+    if not r:
+        return 0.0
+    return 100.0 * _edit_distance(r, h) / len(r)
+
+
+def phrase_errors(segs, words, lang):
+    """Which phrases of the dub were not recognized as written.
+    segs: the dub's phrases [(start, end, text)]; words: what the recognizer heard [(start, end, text)].
+    A word belongs to the phrase whose start it follows. -> [(n, errors, length, ref, hyp)] worst first."""
+    starts = [s for s, _e, _t in segs]
+    heard = [[] for _ in segs]
+    for ws, we, wt in words:
+        mid = (ws + we) / 2 + 0.1
+        k = max((i for i, s in enumerate(starts) if s <= mid), default=None)
+        if k is not None:
+            heard[k].append(wt.strip())
+    rows = []
+    for i, (_s, _e, text) in enumerate(segs):
+        ref, hyp = _tokens(text, lang), _tokens(" ".join(heard[i]), lang)
+        if ref:
+            rows.append((i + 1, _edit_distance(ref, hyp), len(ref), text, " ".join(heard[i])))
+    return sorted(rows, key=lambda r: (-r[1], -r[1] / r[2]))
 
 
 # ----------------------------------------------------------------------------- commands
@@ -246,7 +275,8 @@ def cmd_transcribe(a):
     from faster_whisper import WhisperModel
     model = WhisperModel(a.model, device="auto", compute_type="auto")
     segments, _info = model.transcribe(str(a.audio), language=a.lang, word_timestamps=True,
-                                       vad_filter=True, condition_on_previous_text=False)
+                                       vad_filter=True, condition_on_previous_text=a.condition,
+                                       initial_prompt=a.prompt)
     words = [(w.start, w.end, w.word) for s in segments for w in (s.words or [])]
     phrases = group_words(words, max_len=a.max_phrase)
     write_srt(a.out, phrases)
@@ -381,12 +411,21 @@ def cmd_check(a):
     segs = read_srt(a.srt)
     model = WhisperModel(a.model, device="auto", compute_type="auto")
     got, _ = model.transcribe(str(a.audio), language=a.lang, beam_size=1, vad_filter=True,   # VAD: no made-up text in pauses
-                              condition_on_previous_text=False)
+                              condition_on_previous_text=False, word_timestamps=a.verbose)
+    got = list(got)
     hyp = " ".join(s.text.strip() for s in got)
     ref = " ".join(t for _, _, t in segs)
     unit = "CER" if a.lang in CJK else "WER"
     print(f"{unit}: {error_rate(ref, hyp, a.lang):.1f}%  (the speech recognizer re-reads the dub; "
           f"numbers, names and spelling variants count as errors, so a few % to ~15% is normal)")
+    if a.verbose:
+        words = [(w.start, w.end, w.word) for s in got for w in (s.words or [])]
+        rows = [r for r in phrase_errors(segs, words, a.lang) if r[1] > 0][:a.top]
+        print(f"\nphrases the recognizer read differently (worst first; {unit.lower()}-units wrong / in phrase):")
+        for n, err, length, text, heard in rows:
+            print(f"  #{n}: {err}/{length}\n      wrote: {text}\n      heard: {heard}")
+        print("Read these before blaming the voice: a short phrase scores 100% for one wrong word, and the\n"
+              "recognizer often spells names, numbers and foreign words in another script or another way.\n")
     if a.ref:
         total, d = duration(a.ref), duration(a.audio)
         print(f"length: dub {d:.3f} s vs video {total:.3f} s" +
@@ -414,6 +453,12 @@ def main(argv=None):
     s.add_argument("audio"); s.add_argument("--lang", required=True); s.add_argument("-o", "--out", required=True)
     s.add_argument("--model", default="large-v3-turbo", help="model name or local folder")
     s.add_argument("--max-phrase", type=float, default=7.0, help="longest phrase in seconds")
+    s.add_argument("--prompt", help="names and terms that occur in the speech, as a sentence "
+                                    "(e.g. \"Review of the OMOWAY Omo X Smart scooter\"): helps with spelling")
+    s.add_argument("--condition", action="store_true",
+                   help="let each 30 s window see the text before it. Use it when phrases come out in "
+                        "lower case without punctuation (fast, conversational speech); off by default "
+                        "because it can make the recognizer repeat itself")
     s.set_defaults(fn=cmd_transcribe)
 
     s = sub.add_parser("srt", help="source.srt + lines.json -> target.srt on the same timings")
@@ -443,6 +488,8 @@ def main(argv=None):
     s = sub.add_parser("check", help="re-read the dub with a speech recognizer and compare lengths")
     s.add_argument("audio"); s.add_argument("srt"); s.add_argument("--lang", required=True)
     s.add_argument("--ref"); s.add_argument("--model", default="large-v3-turbo")
+    s.add_argument("--verbose", action="store_true", help="also list the phrases that were read most differently")
+    s.add_argument("--top", type=int, default=15, help="how many phrases --verbose lists")
     s.set_defaults(fn=cmd_check)
 
     a = p.parse_args(argv)

@@ -57,16 +57,16 @@ talking about something else. This tool does not do that:
 
 ## Which languages are supported
 
-![The names of 75 dubbing languages in their own scripts; the four run end to end are in blue](docs/languages-wall.en.svg)
+![The names of 75 dubbing languages in their own scripts; the six run end to end are in blue](docs/languages-wall.en.svg)
 
 **You can dub into 75 languages**: 142 regional variants and 322 ready-made voices (the numbers as of 13
 October 2026). The **original speech** can be in any of roughly 100 languages that the Whisper speech
 recognizer understands.
 
 That is not "every language in the world": you can dub into the languages that the free `edge-tts` voice
-service has a voice for. If your language is not in the list, you cannot dub into it. For 11 languages
-(English, French, Spanish, Portuguese, Italian, German, Russian, Hindi, Chinese, Japanese, Korean) the phrase
-length was tuned on real runs. The rest use a fallback value and their quality was not checked: four
+service has a voice for. If your language is not in the list, you cannot dub into it. For 12 languages
+(English, French, Spanish, Portuguese, Italian, German, Russian, Hindi, Indonesian, Chinese, Japanese, Korean)
+the phrase length was tuned on real runs. The rest use a fallback value and their quality was not checked: six
 languages were run end to end (see [Tested](#tested)).
 
 <details>
@@ -135,10 +135,10 @@ Voices: `edge-tts --list-voices`.
 
 ## Tested
 
-On an 8 min 43 s review video (Russian speech with music), dubbed into four languages. Every phrase starts on
-the original second, none spills into the next one, and each track has the exact length of the video. The
-French track was accepted by YouTube. The speech recognizer "listened" to each dub again, and we compared
-what share of the words did not match our text:
+**First test.** An 8 min 43 s review video (Russian speech with music), dubbed into four languages. Every
+phrase starts on the original second, none spills into the next one, and each track has the exact length of
+the video. The French track was accepted by YouTube. The speech recognizer "listened" to each dub again, and
+we compared what share of the words did not match our text:
 
 | Language | Voice | Speed-up needed (max) | Re-read error |
 |---|---|---|---|
@@ -147,9 +147,27 @@ what share of the words did not match our text:
 | Chinese | zh-CN-Yunxi | 1.14x | 14.1% CER (digits and Latin names) |
 | Hindi | hi-IN-Madhur | 1.25x | 20.6% WER (spelling variants) |
 
+**Second test.** A 13 min 40 s conversational review (two people talking fast, some English phrases, music
+and engine noise in the background), dubbed into six languages with the same checks. It added English
+(Australia) and Indonesian:
+
+| Language | Voice | Speed-up needed (max) | Re-read error |
+|---|---|---|---|
+| French | fr-FR-Henri | 1.22x | 4.8% WER |
+| Spanish | es-MX-Jorge | 1.25x | 4.4% WER |
+| English (Australia) | en-AU-William | 1.18x | 2.5% WER |
+| Indonesian | id-ID-Ardi | 1.24x | 5.3% WER |
+| Chinese | zh-CN-Yunxi | 1.21x | 5.5% CER |
+| Hindi | hi-IN-Madhur | 1.25x | 21.9% WER (see below) |
+
+The Hindi figure looks bad but is largely the measurement: `check --verbose` lists the phrases that were read
+differently, and the worst ones are numbers (the recognizer spells "103.4" out in words), foreign words that
+it writes in Latin letters (Smart, Basic, USB) while the track says them in Devanagari, and one-word replies
+where a single wrong letter is 100%. That is not proof that the voice is fine: nobody listened to it.
+
 WER is the share of wrong words, CER the share of wrong characters (used for Chinese). The author did not
-listen to the Spanish, Hindi and Chinese tracks with a native speaker. Treat the numbers as "the words are
-there and on time", not as a review of the translation or the sound.
+listen to the Spanish, Hindi, Chinese, Indonesian and English tracks with a native speaker. Treat the numbers
+as "the words are there and on time", not as a review of the translation or the sound.
 
 ## Limits
 

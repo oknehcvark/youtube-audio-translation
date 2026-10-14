@@ -116,3 +116,36 @@ def test_max_chars_follows_speaking_speed():
     assert dub.max_chars(4.0, "fr") == 60
     assert dub.max_chars(4.0, "zh") == 20
     assert dub.max_chars(4.0, "xx") == 56            # unknown language: a safe default
+    assert dub.max_chars(4.0, "id") == 48            # measured: the Indonesian voice speaks ~13 chars/s
+    assert dub.max_chars(4.0, "hi") == 44            # measured: the Hindi voice speaks ~12 chars/s
+
+
+def test_phrase_errors_points_at_the_misread_phrase():
+    segs = [(0.0, 2.0, "the cat sat"), (3.0, 5.0, "on the mat"), (6.0, 8.0, "fine")]
+    words = [(0.1, 0.4, "the"), (0.5, 0.8, "cat"), (0.9, 1.2, "sat"),
+             (2.95, 3.15, "on"), (3.5, 3.8, "a"), (3.9, 4.2, "hat"),      # the first word starts a hair early
+             (6.1, 6.5, "fine")]
+    rows = dub.phrase_errors(segs, words, "en")
+    assert rows[0][:3] == (2, 2, 3) and rows[0][4] == "on a hat"
+    assert [r[1] for r in rows[1:]] == [0, 0]
+
+
+def test_phrase_errors_counts_cjk_characters():
+    rows = dub.phrase_errors([(0.0, 2.0, "我爱你")], [(0.1, 0.5, "我爱他")], "zh")
+    assert rows[0][1] == 1 and rows[0][2] == 3
+
+
+def test_check_accepts_verbose_and_top(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(dub, "cmd_check", lambda a: seen.update(verbose=a.verbose, top=a.top))
+    dub.main(["check", "d.wav", "d.srt", "--lang", "fr", "--verbose", "--top", "5"])
+    assert seen == {"verbose": True, "top": 5}
+
+
+def test_transcribe_accepts_prompt_and_condition(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(dub, "cmd_transcribe", lambda a: seen.update(prompt=a.prompt, condition=a.condition))
+    dub.main(["transcribe", "v.wav", "--lang", "ru", "-o", "s.srt"])
+    assert seen == {"prompt": None, "condition": False}                  # the old behaviour stays the default
+    dub.main(["transcribe", "v.wav", "--lang", "ru", "-o", "s.srt", "--prompt", "Omoway Omo X", "--condition"])
+    assert seen == {"prompt": "Omoway Omo X", "condition": True}

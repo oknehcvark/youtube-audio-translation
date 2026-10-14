@@ -99,14 +99,16 @@ repository, and it can change.
 
 ## What to know about quality across languages
 
-- **Phrase length.** The tool counts how many characters fit into a second of speech. For 11 languages
-  (English, French, Spanish, Portuguese, Italian, German, Russian, Hindi, Chinese, Japanese, Korean) the
-  numbers were tuned on real runs. The other 64 use a fallback of 14 characters per second. It is an
+- **Phrase length.** The tool counts how many characters fit into a second of speech. For 12 languages
+  (English, French, Spanish, Portuguese, Italian, German, Russian, Hindi, Indonesian, Chinese, Japanese,
+  Korean) the numbers were tuned on real runs (for Hindi, Indonesian, French, Spanish, English and Chinese
+  the voice was also measured: how many characters per second it really speaks). The other 63 use a
+  fallback of 14 characters per second. It is an
   estimate: phrases can come out a bit long or short, and the voice is sped up or slowed down more often.
 - **The `check` step** scores errors per word. Lao, Khmer and Burmese have no spaces between words, so the
   error figure for them is unreliable. Chinese, Japanese, Korean and Thai are scored per character, which
   is handled.
 - **The agent translates.** It is stronger in big languages and weaker in rare ones (Zulu, Somali,
-  Inuktitut). Four languages were run end to end: French, Spanish, Chinese and Hindi. The rest were
-  not tried, so for them this is "should work", not a verified fact. For any language you do not know,
+  Inuktitut). Six languages were run end to end: French, Spanish, Chinese, Hindi, English (Australia) and
+  Indonesian. The rest were not tried, so for them this is "should work", not a verified fact. For any language you do not know,
   ask a native speaker to listen to the track before you publish it.

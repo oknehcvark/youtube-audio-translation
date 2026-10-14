@@ -39,10 +39,11 @@ any of about 100 languages the Whisper recognizer knows. Do not tell the user it
 - `--lang` of `transcribe` and `check` is a **Whisper** code, which differs from the voice's code for Filipino
   (`tl`, voices `fil-`), Norwegian (`no`, voices `nb-`) and Javanese (`jw`, voices `jv-`). Irish, Zulu and
   Inuktitut have voices but no recognizer: skip `check` for them and say so.
-- `budget` is tuned for en, fr, es, pt, it, de, ru, hi, zh, ja, ko. Every other language falls back to 14
+- `budget` is tuned for en, fr, es, pt, it, de, ru, hi, id, zh, ja, ko. Every other language falls back to 14
   characters per second, which is only an estimate: expect more speed-up and slow-down, and tell the user.
 - `check` scores per word, so for Lao, Khmer and Burmese (no spaces between words) its number is unreliable.
-- Only French, Spanish, Chinese and Hindi were run end to end. For every other language say that it is untested.
+- French, Spanish, Chinese, Hindi, English (Australia) and Indonesian were run end to end. For every other
+  language say that it is untested.
 - Your translation is weaker in rare languages (Zulu, Somali, Inuktitut ...). Say so, and ask for a native
   speaker.
 
@@ -58,7 +59,9 @@ rubberband --version                    # optional: nicer speed-ups (otherwise f
 
 Missing pieces:
 
-- Python packages: `pip3 install -r requirements.txt`
+- Python packages: `pip3 install -r requirements.txt`. `edge-tts` must be 7.3.1 or newer: older versions
+  get `403 Invalid response status` from the voice service and `build` fails on the first phrase
+  (`pip3 install -U edge-tts` fixes it).
 - `ffmpeg`: `brew install ffmpeg` (macOS) / `winget install ffmpeg` (Windows) / `apt install ffmpeg` (Linux)
 - `rubberband` (optional): `brew install rubberband` / `apt install rubberband-cli`
 - the separator (large, install on its own): `pip3 install "audio-separator[cpu]"`. If `import scipy` crashes on
@@ -69,11 +72,17 @@ Tell the user, and make sure there are several GB of free disk space.
 
 ## 2. Separate the voice from the music
 
+**Audio-only input** (`.aac`, `.m4a`, `.mp3`): decode it once and use the result everywhere a video is
+asked for (`separate`, and `--ref` of `build`, `mix` and `check`):
+`ffmpeg -i in.aac -ar 44100 -ac 2 original.wav`. The length of a raw `.aac` is only known after decoding (one
+real file: `ffprobe` said 826.5 s, the decoded length was 820.04 s).
+
 ```bash
 python3 scripts/dub.py separate "/path/video.mp4" -o work
 ```
 
-Gives `work/vocals.wav` and `work/music.wav`. If the video has no music, skip this step and mix with silence
+Gives `work/vocals.wav` and `work/music.wav`. Any separator that produces these two files will do (the later
+steps only read the files). If the video has no music, skip this step and mix with silence
 (use `--music` with any silent file) - or simply build and deliver `dub_only.wav`.
 
 ## 3. Transcribe
@@ -85,6 +94,14 @@ python3 scripts/dub.py transcribe work/vocals.wav --lang ru -o work/source.srt
 `--lang` is the language of the ORIGINAL speech. Read `work/source.srt` completely and correct mistakes in
 place (keep the timings). Phrases come out about 2-7 seconds long.
 
+Two options for hard audio (measured on a fast two-person conversation: without them 42 of 161 phrases came
+out in lower case without punctuation and half-garbled; with `--condition` none did):
+
+- `--condition`: every 30 s window sees the text before it. Use it when phrases come out without punctuation
+  or in lower case. It is off by default because on some audio it makes the recognizer repeat itself.
+- `--prompt "Review of the OMOWAY Omo X Smart scooter, Singapore, BYD"`: names and terms that occur in the
+  speech. It fixes spelling ("Omaway" -> "OMOWAY"), but it does not fix garbled phrases by itself.
+
 ## 4. Translate
 
 ```bash
@@ -92,7 +109,7 @@ python3 scripts/dub.py budget work/source.srt --lang fr
 ```
 
 It prints, for every phrase, the seconds it has and the maximum number of characters (about 15 chars/s for
-French and English, 14 Spanish, 13 Hindi and German, 5 characters/s for Chinese). Write the translation
+French and English, 14 Spanish, 13 German, 12 Indonesian, 11 Hindi, 5 characters/s for Chinese). Write the translation
 yourself as a JSON list of strings in the same order, one per phrase, e.g. `work/lines.fr.json`:
 
 ```json
@@ -130,6 +147,11 @@ python3 scripts/dub.py check work/fr/dub_only.wav work/fr.srt --lang fr --ref "/
 `mix` writes `final.wav` and `final.m4a` and prints their length next to the video's; they must agree to
 within a few hundredths of a second. `check` re-reads the dub with a speech recognizer (error rate: a few % to
 ~15% is normal; digits, brand names and spelling variants count as errors; Chinese is scored per character).
+Add `--verbose` (and `--top N`) to list the phrases that were read most differently, with what was written and
+what was heard. Read them before judging the voice: a one-word phrase scores 100% for one wrong letter, the
+recognizer spells numbers out in words, and for Hindi it writes foreign words in Latin letters while the
+track says them in Devanagari (a Hindi dub that scored 22% was mostly this). A phrase it did not read at
+all (an empty "heard") is not proof that it is silent: check the audio around that second.
 
 Repeat steps 4-5 for every language; steps 2-3 are done once.
 
@@ -146,6 +168,9 @@ track (and the `.srt` as that language's subtitles). Do not upload anything on t
 ## If something goes wrong
 
 - `TTS failed for phrase N` / `retry`: the network dropped; run `build` again, finished phrases are kept.
+- `retry N: 403, message='Invalid response status'` ending in `TTS failed`: `edge-tts` is too old,
+  `pip3 install -U edge-tts` (7.3.1 or newer). `Cannot connect to host speech.platform.bing.com`: a network
+  blip, `build` retries by itself and keeps what it already spoke.
 - A phrase is silent: its text was empty; check the line in the JSON.
 - The voice sounds rushed: the line is over its budget; shorten it.
 - YouTube says the lengths differ: run `ffprobe` on the video and on `final.m4a` and compare; rebuild with

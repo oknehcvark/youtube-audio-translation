@@ -50,22 +50,22 @@
 <text class="s" x="961.9" y="198.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >српски</text>
 <rect x="1024.2" y="168.0" width="98.4" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
 <text class="s" x="1073.4" y="198.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >فارسی</text>
-<rect x="108.1" y="224.0" width="93.7" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="154.9" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >català</text>
-<rect x="211.7" y="224.0" width="83.4" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="253.4" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >Malti</text>
-<rect x="305.1" y="224.0" width="141.1" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="375.7" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >українська</text>
-<rect x="456.2" y="224.0" width="196.9" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="554.6" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >Bahasa Indonesia</text>
-<rect x="663.1" y="224.0" width="92.3" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="709.3" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >suomi</text>
-<rect x="765.4" y="224.0" width="104.0" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="817.4" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >English</text>
-<rect x="879.4" y="224.0" width="104.1" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="931.5" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >čeština</text>
-<rect x="993.6" y="224.0" width="98.4" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
-<text class="s" x="1042.7" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >ខ្មែរ</text>
+<rect x="105.3" y="224.0" width="93.7" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
+<text class="s" x="152.2" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >català</text>
+<rect x="209.0" y="224.0" width="83.4" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
+<text class="s" x="250.7" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >Malti</text>
+<rect x="302.4" y="224.0" width="141.1" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
+<text class="s" x="372.9" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >українська</text>
+<rect x="453.4" y="224.0" width="200.8" height="46.0" rx="23.0" fill="#2fb4ff"/>
+<text class="s" x="553.8" y="254.0" font-size="19" font-weight="600" fill="#06263d" text-anchor="middle" style="" >Bahasa Indonesia</text>
+<rect x="664.2" y="224.0" width="92.3" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
+<text class="s" x="710.4" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >suomi</text>
+<rect x="766.6" y="224.0" width="105.6" height="46.0" rx="23.0" fill="#2fb4ff"/>
+<text class="s" x="819.4" y="254.0" font-size="19" font-weight="600" fill="#06263d" text-anchor="middle" style="" >English</text>
+<rect x="882.2" y="224.0" width="104.1" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
+<text class="s" x="934.2" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >čeština</text>
+<rect x="996.3" y="224.0" width="98.4" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
+<text class="s" x="1045.5" y="254.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >ខ្មែរ</text>
 <rect x="71.5" y="280.0" width="136.7" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
 <text class="s" x="139.9" y="310.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >Basa Jawa</text>
 <rect x="218.2" y="280.0" width="116.2" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
@@ -165,5 +165,5 @@
 <rect x="824.4" y="560.0" width="134.6" height="46.0" rx="23.0" fill="rgba(255,255,255,.07)"/>
 <text class="s" x="891.7" y="590.0" font-size="19" font-weight="500" fill="rgba(255,255,255,.78)" text-anchor="middle" style="" >slovenčina</text>
 <circle cx="52" cy="646" r="6" fill="#2fb4ff"/>
-<text class="m" x="70.0" y="651.0" font-size="13" font-weight="400" fill="#8c8c93" text-anchor="start" style="" >прогнаны целиком: французский, испанский, китайский, хинди</text>
+<text class="m" x="70.0" y="651.0" font-size="13" font-weight="400" fill="#8c8c93" text-anchor="start" style="" >прогнаны целиком: французский, испанский, китайский, хинди, английский, индонезийский</text>
 </svg>
